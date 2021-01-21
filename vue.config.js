@@ -2,14 +2,16 @@ module.exports = {
   configureWebpack: {
     devServer: {
       open: true,
-      // proxy: {
-      //   '/netease-api': {
-      //     target: 'http://localhost:3000',
-      //     pathRewrite: { '^/netease-api': '' },
-      //     changeOrigin: true,
-      //     secure: false,
-      //   },
-      // },
+      proxy: {
+        '/api': {
+          target: 'www.vtmer2018.top:8066/api',
+          pathRewrite: {
+            "^/api": "/"
+          },
+          changeOrigin: true,
+          secure: false,
+        },
+      },
       port: 8888,
     },
     // externals: process.env.NODE_ENV === 'production' ? {
