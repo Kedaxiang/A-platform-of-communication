@@ -44,7 +44,7 @@ export default {
 <style scoped lang="less">
   .box-wrapper {
     display: flex;
-    justify-content: space-between;
+    // justify-content: space-between;
     flex-wrap: wrap;
     align-items: center;
     padding: 10px 20px;
@@ -53,6 +53,7 @@ export default {
       width: 400px;
       height: 255px;
       margin-top: 20px;
+      margin-left: 20px;
 
       .pic-box {
         width: 400px;
