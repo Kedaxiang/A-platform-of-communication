@@ -1,7 +1,7 @@
 import axios from 'axios'
 import Vue from 'vue'
 
-const http_url = api;
+const http_url = '/api';
 
 // 请求和应答报文数据均采用JSON格式，UTF-8编码
 const instance = axios.create({
@@ -53,6 +53,6 @@ export const GET = (url, data = {}) => {
     // get方法需要加上params来接受参数
     return instance.get(url, { params: data })
 }
-export const POST = (url, data) => {
-    return instance.post(url, data)
+export const POST = (url, data = {}, querys = {}) => {
+    return instance.post(url, data, { params: querys })
 }

@@ -4,9 +4,9 @@ module.exports = {
       open: true,
       proxy: {
         '/api': {
-          target: 'www.vtmer2018.top:8066/api',
+          target: 'http://www.vtmer2018.top:8066',
           pathRewrite: {
-            "^/api": "/"
+            "^/api": ""
           },
           changeOrigin: true,
           secure: false,

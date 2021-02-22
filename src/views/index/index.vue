@@ -46,6 +46,8 @@ import AllCourse from './AllCourse'
 
 import { recommendList, newestList, hotList, allList } from '@/assets/util/data.js'
 
+import courseServer from '@/api/course.js'
+
 export default {
   data() {
     return {
@@ -110,13 +112,25 @@ export default {
       }
       window.requestAnimationFrame(step);
     },
+    async getData() {
+      const getHot = courseServer.getHot()
+      const getLatest = courseServer.getLatest()
+      const getRecommend = courseServer.getRecommend()
+      Promise.all([getRecommend, getLatest, getHot])
+        .then(res => {
+          [this.recommendList, this.newestList, this.hotList]
+            = [res[0].recommendList, res[1].recommendList, res[2].hotList]
+          console.log(res);
+        })
+    }
   },
   components: { Header, Carousel, CourseBox, AllCourse },
   created() {
-    [this.recommendList, this.newestList, this.hotList, this.allList] = [recommendList, newestList, hotList, allList];
+    // [this.recommendList, this.newestList, this.hotList, this.allList] = [recommendList, newestList, hotList, allList];
     setTimeout(() => {
       this.loading = false;
     }, 1000)
+    this.getData()
   }
 }
 </script>

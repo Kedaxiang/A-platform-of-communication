@@ -10,10 +10,10 @@
         <img :src="item.picUrl" alt="">
       </div>
       <div class="title">
-        <span>{{item.title}}</span>
+        <span>{{item.name}}</span>
       </div>
       <div class="intro">
-        <span>{{item.intro}}</span>
+        <span>{{item.introduction }}</span>
       </div>
     </div>
   </div>
@@ -37,7 +37,8 @@ export default {
     toVideo() {
       this.$router.push('/videoStudy')
     }
-  }
+  },
+  
 }
 </script>
 
