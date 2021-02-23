@@ -7,7 +7,7 @@
         <div class="cover">
           <i class="el-icon-video-play"></i>
         </div>
-        <img :src="item.picUrl" alt="">
+        <img :src="item.pictureUrl" alt="">
       </div>
       <div class="title">
         <span>{{item.name}}</span>

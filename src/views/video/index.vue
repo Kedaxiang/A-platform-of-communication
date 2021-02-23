@@ -259,13 +259,14 @@ export default {
 
     .video-menu {
       width: 340px;
-      background-color: #fff;
+      background-color: #f4f4f4;
 
       .list-test {
-        
+        background-color: #fff;
+
         .test-name {
           text-align: center;
-          margin-top: 30px;
+          padding-top: 30px;
           font-size: 20px;
           font-weight: 600;
         }
