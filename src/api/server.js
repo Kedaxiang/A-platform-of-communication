@@ -14,13 +14,16 @@ const instance = axios.create({
 
 // request拦截器
 instance.interceptors.request.use(config => {
-        // console.log('request拦截器', config)    
+        // console.log('request拦截器', config)
+        let token = localStorage.getItem('token')
+        console.log(token);
+        if(token) config.headers.Authorization = localStorage.getItem('token')
         return config
     },
     error => {
         // Do something with request error
         console.log('request拦截器报错', error) // for debug
-        Vue.prototype.$Message.error("请求错误" + error);
+        Vue.prototype.$message.error("请求错误" + error);
         Promise.reject(error)
     });
 
@@ -30,7 +33,7 @@ instance.interceptors.response.use(response => {
     if (statusCode == 200) {
         return response.data;
     } else {
-        Vue.prototype.$Message.error(response.statusText);
+        Vue.prototype.$message.error(response.statusText);
         return {
             code:400,
             msg:'服务器连接失败',
@@ -41,7 +44,7 @@ instance.interceptors.response.use(response => {
     error => {
         // Do something with request error
         console.log('response拦截器报错', error) // for debug
-        Vue.prototype.$Message.error("请求出错" + error);
+        Vue.prototype.$message.error("请求出错" + error);
 
         return Promise.reject(error)
     })

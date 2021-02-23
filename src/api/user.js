@@ -21,7 +21,14 @@ class UserService  {
   getVerifyCode(data) {
     return GET('/api/user/getVerifyCode', data)
   }
-
+  // 获取用户的个人信息
+  getUserInfo() {
+    return POST('/api/user/getUserInfo')
+  }
+  // 修改用户绑定的手机号
+  changePhoneNumber(data) {
+    return POST('/api/user/changePhoneNumber', {}, data).then(res => res)
+  }
 }
 const userService = new UserService();
 
