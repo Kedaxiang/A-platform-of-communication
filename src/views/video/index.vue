@@ -9,16 +9,16 @@
       </div>
       <div class="right-box">
         <div class="btn">
-          <i class="el-icon-question"/>
+          <i class="el-icon-question" />
           帮助
         </div>
-        <div class="btn"  @click="toUser" v-if="!ifLogin">
-          登录/注册
-        </div>
+        <div class="btn" @click="toUser" v-if="!ifLogin">登录/注册</div>
         <el-dropdown @command="handleCommand" v-else>
           <div class="user el-dropdown-link">
-            <div class="avatar"></div>
-            <div class="userName">可达箱箱箱箱箱箱</div>
+            <div class="avatar">
+              <img :src="userInfo.headPortrait" alt="" />
+            </div>
+            <div class="userName">{{ userInfo.name }}</div>
           </div>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="logout">安全退出</el-dropdown-item>
@@ -29,27 +29,23 @@
     <div class="content">
       <div class="video-box">
         <div class="title">
-          <span class="chapter">中医药文化</span>
+          <span class="chapter">{{ courseInfo.name }}</span>
         </div>
         <div class="video">
-          <video 
-            src="https://wsvideo.zhihuishu.com/zhs/createcourse/course_second/202006/ac32ad712f35498dbd5b48da14a17b71_512.mp4"
-            autoplay
-            controls="controls"/>
+          <video :src="courseInfo.videoUrl" autoplay controls="controls" />
         </div>
       </div>
       <div class="video-menu">
         <div class="list-test">
           <div class="test-name">文件下载</div>
           <el-divider></el-divider>
-          <div class="file-wrapper" v-for="item in 6" :key="item">
+          <div class="file-wrapper" v-for="item in courseInfo.resourceUrlList" :key="item">
             <div class="file">
-              文件：{{item}} 
-              <el-button type="primary">下载</el-button>
+              文件：{{ item }}
+              <el-button type="primary" @click="download">下载</el-button>
             </div>
-             <el-divider></el-divider>
+            <el-divider></el-divider>
           </div>
-          
         </div>
       </div>
     </div>
@@ -57,29 +53,61 @@
 </template>
 
 <script>
+import courseService from "@/api/course.js";
+import userService from "@/api/user.js";
+
 export default {
   data() {
     return {
       ifLogin: false,
-    }
+      courseId: "",
+      courseInfo: {},
+      userInfo: {},
+    };
+  },
+  watch: {
+    ifLogin(val) {
+      if (val) this.fetchUserInfo();
+    },
   },
   methods: {
     toIndex() {
-      this.$router.push('/index')
+      this.$router.push("/index");
     },
     handleCommand(command) {
-      if(command == 'logout') {
+      if (command == "logout") {
         localStorage.clear();
         this.ifLogin = false;
+        this.$message.success("退出登陆成功");
       } else {
-        this.$router.push('/home')
+        this.$router.push("/home");
       }
     },
+    async fetchCourseDetail(id) {
+      let res = await courseService.getCourseDetail(id);
+      console.log(res);
+      if (res.success) this.courseInfo = res.detail;
+    },
+    async fetchUserInfo() {
+      let res = await userService.getUserInfo();
+      if(res.success) this.userInfo = res.userInfo
+      else this.$message.error(res.message)
+    },
+    toUser() {
+      this.$router.push("/user");
+    },
+    download() {
+      console.log('下载文件');
+    }
   },
   created() {
-    this.ifLogin = localStorage.getItem("ifLogin")
-  }
-}
+    this.ifLogin = localStorage.getItem("ifLogin");
+  },
+  mounted() {
+    this.courseId = this.$route.query.courseId;
+    this.fetchCourseDetail(this.courseId);
+  },
+};
 </script>
 
 <style lang="less" scoped>
@@ -93,7 +121,6 @@ export default {
     align-items: center;
     justify-content: space-between;
     padding: 0 100px;
-
 
     .left-box {
       display: flex;
@@ -116,7 +143,7 @@ export default {
         -webkit-box-shadow: none;
         box-shadow: none;
         font-size: 12px;
-        color: #FFFFFF;
+        color: #ffffff;
       }
 
       .tabs-wrapper {
@@ -125,7 +152,7 @@ export default {
         align-items: center;
 
         .tab {
-          user-select:none;
+          user-select: none;
           width: 104px;
           height: 64px;
           line-height: 64px;
@@ -134,7 +161,6 @@ export default {
           font-style: normal;
           font-size: 14px;
           color: rgba(255, 255, 255, 0.447058823529412);
-
         }
       }
     }
@@ -151,7 +177,7 @@ export default {
       width: 180px;
 
       .btn {
-        user-select:none;
+        user-select: none;
         cursor: pointer;
         font-size: 14px;
         color: rgba(255, 255, 255, 0.447058823529412);
@@ -175,11 +201,17 @@ export default {
           -webkit-box-shadow: none;
           box-shadow: none;
           font-size: 18px;
-          color: #FFFFFF;
+          color: #ffffff;
+          overflow: hidden;
+
+          img {
+            width: 100%;
+            height: 100%;
+          }
         }
 
         .userName {
-          font-family: 'Microsoft YaHei';
+          font-family: "Microsoft YaHei";
           font-weight: 400;
           font-style: normal;
           font-size: 14px;
@@ -228,7 +260,7 @@ export default {
           text-overflow: ellipsis;
           display: inline-block;
           font-size: 13px;
-          font-weight: 700 ;
+          font-weight: 700;
           color: #2a2a2a;
         }
 

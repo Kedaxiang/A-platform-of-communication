@@ -3,6 +3,7 @@ import Vue from 'vue'
 
 const http_url = '/api';
 
+
 // 请求和应答报文数据均采用JSON格式，UTF-8编码
 const instance = axios.create({
     baseURL: http_url,
@@ -12,11 +13,12 @@ const instance = axios.create({
     }
 })
 
+Vue.prototype.axios = instance;
+
 // request拦截器
 instance.interceptors.request.use(config => {
         // console.log('request拦截器', config)
-        let token = localStorage.getItem('token')
-        console.log(token);
+        let token = localStorage.getItem('token');
         if(token) config.headers.Authorization = localStorage.getItem('token')
         return config
     },

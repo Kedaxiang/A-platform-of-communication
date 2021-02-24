@@ -26,8 +26,10 @@
         </div>
         <el-dropdown @command="handleCommand" v-else>
           <div class="user el-dropdown-link">
-            <div class="avatar"></div>
-            <div class="userName">可达箱箱箱箱箱箱</div>
+            <div class="avatar">
+              <img :src="userInfo.headPortrait" alt="">
+            </div>
+            <div class="userName">{{userInfo.name}}</div>
           </div>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="toHome">个人主页</el-dropdown-item>
@@ -54,8 +56,10 @@
         </div>
         <el-dropdown @command="handleCommand" v-else>
           <div class="user el-dropdown-link">
-            <div class="avatar"></div>
-            <div class="userName">可达箱箱箱箱箱箱</div>
+            <div class="avatar">
+              <img :src="userInfo.headPortrait" alt="">
+            </div>
+            <div class="userName">{{userInfo.name}}</div>
           </div>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="logout">安全退出</el-dropdown-item>
@@ -67,6 +71,8 @@
 </template>
 
 <script>
+import userService from '@/api/user.js'
+
 export default {
   data() {
     return {
@@ -85,10 +91,27 @@ export default {
         {
           title: '全部课程',
         },
-      ]
+      ],
+      userInfo: {}
     }
   },
   props: ['ifIndex'],
+  computed: {
+    listenIsChangeAvatar() {
+      return this.$store.state.isChangeAvatar
+    }
+  },
+  watch: {
+    ifLogin(val) {
+      if(val) this.fetchUserInfo();
+    },
+    listenIsChangeAvatar(val) {
+      if(val) {
+        this.fetchUserInfo();
+        this.$store.commit('changeAvatarFinish')
+      }
+    }
+  },
   methods: {
     tabsClick(index) {
       this.idx = index;
@@ -101,12 +124,19 @@ export default {
       if(command == 'logout') {
         localStorage.clear();
         this.ifLogin = false;
+        if(this.$route.name == 'home') this.$router.push('/user')
+        this.$message.success('退出成功')
       } else {
         this.$router.push('/home')
       }
     },
     toIndex() {
       this.$router.push('/index')
+    },
+    async fetchUserInfo() {
+      let res = await userService.getUserInfo();
+      if(res.success) this.userInfo = res.userInfo
+      else this.$message.error(res.message)
     }
   },
   created() {
@@ -196,12 +226,18 @@ export default {
           height: 32px;
           background-color: rgba(255, 255, 255, 0.458823529411765);
           border: none;
-          border-radius: 15px;
+          border-radius: 50%;
           -moz-box-shadow: none;
           -webkit-box-shadow: none;
           box-shadow: none;
           font-size: 18px;
           color: #FFFFFF;
+          overflow: hidden;
+
+          img {
+            width: 100%;
+            height: 100%;
+          }
         }
 
         .userName {

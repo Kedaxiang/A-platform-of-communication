@@ -27,7 +27,23 @@ class UserService  {
   }
   // 修改用户绑定的手机号
   changePhoneNumber(data) {
-    return POST('/api/user/changePhoneNumber', {}, data).then(res => res)
+    return POST('/api/user/changePhoneNumber', {}, { phoneNumber: data }).then(res => res)
+  }
+  // 修改用户昵称
+  changeUsername(data) {
+    return POST('/api/user/changeUsername', {}, { username: data }).then(res => res)
+  }
+  // 修改用户头像
+  changeAvatar(data) {
+    return POST('/api/user/changeHeadPortrait', {}, {photoUrl: data}).then(res => res)
+  }
+  // 修改用户密码
+  changePwd(data) {
+    return POST('/api/user/changePwd', {}, { newPwd: data }).then(res => res)
+  }
+  // 查看用户的历史浏览记录
+  getUserRecord(page, size) {
+    return GET('/api/course/getRecord', { page, size })
   }
 }
 const userService = new UserService();

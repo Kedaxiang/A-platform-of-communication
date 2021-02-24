@@ -19,23 +19,25 @@
       <div class="input-wrapper">
         <div class="input-box">
           <div class="title">旧密码</div>
-          <el-input placeholder="请输入当前账号密码" v-model="oldPwd" />
+          <el-input placeholder="请输入当前账号密码" v-model="oldPwd" type="password"/>
         </div>
         <div class="input-box">
           <div class="title">新密码</div>
-          <el-input placeholder="请输入新密码" v-model="newPwd" />
+          <el-input placeholder="请输入新密码" v-model="newPwd" type="password"/>
         </div>
         <div class="input-box">
           <div class="title">确认密码</div>
-          <el-input placeholder="请重复新密码" v-model="checkPwd" />
+          <el-input placeholder="请重复新密码" v-model="checkPwd" type="password"/>
         </div>
       </div>
-      <el-button style="margin-top:20px">确认修改</el-button>
+      <el-button style="margin-top:20px" @click="changePwd">确认修改</el-button>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import userService from '@/api/user.js'
+
 export default {
   data() {
     return {
@@ -45,6 +47,23 @@ export default {
       dialogTableVisible: false,
     };
   },
+  methods: {
+    async changePwd() {
+      let { newPwd, checkPwd } = this;
+      if(newPwd != checkPwd) {
+        this.$message.error('两次输入密码不一致')
+        return;
+      }
+      let res = await userService.changePwd(newPwd);
+      console.log(res);
+      if(res.success) {
+        this.$message.success('修改成功,请重新登录')
+        this.$router.push('/user')
+      } else {
+        this.$message.error(res.message)
+      }
+    }
+  }
 };
 </script>
 

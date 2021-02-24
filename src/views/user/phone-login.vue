@@ -9,7 +9,7 @@
       <el-form-item prop="userName">
         <el-input
           placeholder="手机号"
-          v-model="loginForm.userName"
+          v-model="loginForm.phoneNumber"
           prefix-icon="el-icon-mobile-phone"
         />
       </el-form-item>
@@ -18,7 +18,7 @@
           <el-input 
             placeholder="验证码" 
             prefix-icon="el-icon-lock"
-            v-model="loginForm.verification" 
+            v-model="loginForm.verifyCode" 
             class="input-with-select" 
             style="width: 200px"
           />
@@ -27,7 +27,7 @@
         
       </el-form-item>
       <div class="btn-wrap">
-        <el-checkbox v-model="loginForm.checked">记住我</el-checkbox>
+        <el-checkbox v-model="checked">记住我</el-checkbox>
       </div>
       <el-form-item>
         <el-button type="primary" class="login-button" native-type="submit" style="width: 100%;">
@@ -39,23 +39,25 @@
 </template>
 
 <script>
+import userService from '@/api/user.js'
+
 export default {
   data() {
     return {
       ifCur: true,
       rules: {
-        userName: [
+        phoneNumber: [
           { required: true, message: "请输入手机号", trigger: "blur" }
         ],
-        verification: [
+        verifyCode: [
           { required: true, message: "请输入验证码", trigger: "blur" }
         ]
       },
       loginForm: {
-        userName: "",
-        verification: "",
-        checked: Boolean
+        phoneNumber: "",
+        verifyCode: "",
       },
+      checked: Boolean,
       timeout: true,
       btnText: '获取验证码'
     }
@@ -65,12 +67,24 @@ export default {
       this.$refs.loginForm.validate(async valid => {
         // element-ui 提供的表单预验证
         if (valid) {
-          this.$message.success("登陆成功");
-        // this.$router.push("/home/preview");
+          let res = await userService.phoneLogin(this.loginForm);
+          console.log(res);
+          if (res.success) {
+            localStorage.setItem("ifLogin", true);
+            localStorage.setItem("token", res.userLoginVO.token);
+            this.$message.success("登陆成功");
+            this.$router.push("/index");
+          } else {
+            this.$message.error(res.message)
+          }
         }
       });
     },
-    getCode() {
+    async getCode() {
+      let res = await userService.getVerifyCode({
+        phoneNumber: this.loginForm.phoneNumber,
+      });
+      console.log(res);
       let time = 60;
       this.timeout = false;
       let countDown = setInterval(() => {
@@ -83,7 +97,8 @@ export default {
           this.btnText = '获取验证码'
         }
       }, 1000);
-    }
+    },
+
   }
 }
 </script>

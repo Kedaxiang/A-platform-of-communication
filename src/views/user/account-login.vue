@@ -102,12 +102,14 @@ export default {
         if (valid) {
           console.log(this.loginForm);
           let res = await userService.pwdLogin(this.loginForm);
-          console.log(res);
+          // console.log(res);
           if (res.success) {
             localStorage.setItem("ifLogin", true);
             localStorage.setItem("token", res.userLoginVO.token);
             this.$message.success("登陆成功");
             this.$router.push("/index");
+          } else {
+            this.$message.error(res.message)
           }
         }
       });

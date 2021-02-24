@@ -9,7 +9,7 @@
         <el-tab-pane label="账号管理" name="second">
           <BasicInfo/>
         </el-tab-pane>
-        <el-tab-pane label="课程进度" name="third">
+        <el-tab-pane label="学习进度" name="third">
           <CoursePlan/>
         </el-tab-pane>
       </el-tabs>

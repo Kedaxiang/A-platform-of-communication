@@ -44,8 +44,6 @@ import Carousel from './Carousel'
 import CourseBox from './CourseBox'
 import AllCourse from './AllCourse'
 
-import { recommendList, newestList, hotList, allList } from '@/assets/util/data.js'
-
 import courseServer from '@/api/course.js'
 
 export default {
@@ -120,7 +118,7 @@ export default {
         .then(res => {
           [this.recommendList, this.newestList, this.hotList]
             = [res[0].recommendList, res[1].recommendList, res[2].hotList]
-          console.log(res);
+          // console.log(res);
         })
     }
   },
@@ -145,6 +143,8 @@ export default {
       padding: 0 30px 20px;
 
       .course-box_wrapper {
+        width: 1400px;
+        margin: auto;
 
         .box-title {
           display: flex;

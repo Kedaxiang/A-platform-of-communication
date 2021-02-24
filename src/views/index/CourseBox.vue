@@ -3,7 +3,7 @@
     <div class="course-box"
          v-for="item in list"
          :key="item.id">
-      <div class="pic-box" @mouseover="showCover(item.id)" @mouseout="preset()" @click="toVideo">
+      <div class="pic-box" @mouseover="showCover(item.id)" @mouseout="preset()" @click="toVideo(item.id)">
         <div class="cover">
           <i class="el-icon-video-play"></i>
         </div>
@@ -23,8 +23,19 @@
 export default {
   data() {
     return {
-      id: ''
+      id: '',
+      pathInfo: {
+        path: 'videoStudy',
+        query: {
+          courseId: ''
+        }
+      }
     }
+  },
+  watch: {
+    // list(val) {
+    //   console.log(val);
+    // }
   },
   props: ['list'],
   methods: {
@@ -34,11 +45,11 @@ export default {
     preset() {
       this.id = ''
     },
-    toVideo() {
-      this.$router.push('/videoStudy')
+    toVideo(id) {
+      this.pathInfo.query.courseId = id
+      this.$router.push(this.pathInfo)
     }
   },
-  
 }
 </script>
 

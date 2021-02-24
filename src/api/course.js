@@ -14,8 +14,12 @@ class CourseService  {
         return GET('/api/course/getRecommend')
     }
     // 获取所有课程
-    getAll() {
-        return GET('/api/course/getAll')
+    getAll(query) {
+        return GET('/api/course/getAll', query)
+    }
+    // 获取课程详情
+    getCourseDetail(id) {
+        return GET(`/api/course/getDetail/${id}`)
     }
 }
 const courseService = new CourseService();

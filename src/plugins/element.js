@@ -20,7 +20,8 @@ import {
   Pagination,
   Dropdown, DropdownItem, DropdownMenu,
   Tabs, TabPane,
-  Loading } from 'element-ui'
+  Loading,
+  Progress } from 'element-ui'
 
 //由于Message组件并没有install 方法供Vue来操作的，是直接返回的，因此按照官方文档单独引入的方法是
 //会报错的，需要给 Message 添加 install 方法
@@ -71,3 +72,5 @@ Vue
 .use(Tabs).use(TabPane)
 //loading
 .use(Loading)
+//进度条
+.use(Progress)
