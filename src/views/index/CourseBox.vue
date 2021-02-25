@@ -56,7 +56,7 @@ export default {
 <style scoped lang="less">
   .box-wrapper {
     display: flex;
-    // justify-content: space-between;
+    justify-content: space-between;
     flex-wrap: wrap;
     align-items: center;
     padding: 10px 20px;
@@ -72,6 +72,7 @@ export default {
         height: 196px;
         overflow: hidden;
         position: relative;
+        cursor: pointer;
         
         &:hover {
           img {

@@ -5,11 +5,11 @@
         <el-input
           placeholder="搜索"
           prefix-icon="el-icon-search"
-          v-model="searchInput"
+          v-model="name"
         >
         </el-input>
       </div>
-      <el-button type="primary">搜索</el-button>
+      <el-button type="primary" @click="searchCourse">搜索</el-button>
     </div>
     <!-- <CourseBox :list="list.slice((currentPage-1)*6,currentPage*6)"/> -->
     <CourseBox :list="list" />
@@ -39,13 +39,13 @@ export default {
   data() {
     return {
       currentPage: 1,
-      searchInput: "",
+      name: "",
       pageQuery: {
         page: 1,
         size: 6,
       },
       list: [],
-      total: 0
+      total: 0,
     };
   },
   components: { CourseBox },
@@ -53,8 +53,20 @@ export default {
   methods: {
     async fetchAllCourse() {
       let res = await courseService.getAll(this.pageQuery);
+      // console.log(res);
+      if (res.success)
+        [this.total, this.list] = [res.data.totalCount, res.data.list];
+    },
+    async searchCourse() {
+      let res = await courseService.searchCourse({
+        name: this.name,
+        page: this.pageQuery.page,
+        size: this.pageQuery.size,
+      });
       console.log(res);
-      if (res.success) [this.total, this.list] = [res.data.totalCount, res.data.list];
+      if (res.success) {
+        [this.list, this.total] = [res.data.list, res.data.totalCount];
+      }
     },
   },
   mounted() {

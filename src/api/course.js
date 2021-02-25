@@ -21,6 +21,14 @@ class CourseService  {
     getCourseDetail(id) {
         return GET(`/api/course/getDetail/${id}`)
     }
+    // 搜索课程
+    searchCourse(name) {
+        return GET('/api/course/search', name)
+    }
+    // 获取轮播图
+    getCarousel() {
+        return GET('/api/slideShow/getShow')
+    }
 }
 const courseService = new CourseService();
 

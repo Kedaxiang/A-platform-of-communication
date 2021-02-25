@@ -41,8 +41,8 @@
           <el-divider></el-divider>
           <div class="file-wrapper" v-for="item in courseInfo.resourceUrlList" :key="item">
             <div class="file">
-              文件：{{ item }}
-              <el-button type="primary" @click="download">下载</el-button>
+              文件
+              <el-button type="primary" @click="download(item)">下载</el-button>
             </div>
             <el-divider></el-divider>
           </div>
@@ -96,8 +96,9 @@ export default {
     toUser() {
       this.$router.push("/user");
     },
-    download() {
+    download(url) {
       console.log('下载文件');
+      window.open(url)
     }
   },
   created() {
@@ -284,7 +285,7 @@ export default {
 
         video {
           width: 100%;
-          height: 100%;
+          // height: 100%;
         }
       }
     }

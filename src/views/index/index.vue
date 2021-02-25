@@ -1,50 +1,45 @@
 <template>
   <div class="wrapper">
-    <Header class="header" @fromChild="getVal" :ifIndex="true"/>
+    <Header class="header" @fromChild="getVal" :ifIndex="true" />
     <div class="content-wrapper" v-if="!ifShowAllCourse">
-      <Carousel/>
-      <div 
+      <Carousel :list="carouselList" style="width: 1440px; margin: auto"/>
+      <!-- <div 
         class="course-box_wrapper" 
         v-loading="loading"
         element-loading-text="拼命加载中"
         element-loading-spinner="el-icon-loading"
-        element-loading-background="rgba(244, 244, 244, .8)"> 
+        element-loading-background="rgba(244, 244, 244, .8)">  -->
+      <div class="course-box_wrapper">
         <div class="box-title" ref="idx0">
           <div>编辑推荐</div>
         </div>
-        <CourseBox :list="recommendList"/>
+        <CourseBox :list="recommendList" />
         <el-divider></el-divider>
       </div>
       <div class="course-box_wrapper">
-        <div class="box-title" ref="idx1">
-          最新课程
-        </div>
-        <CourseBox :list="newestList"/>
+        <div class="box-title" ref="idx1">最新课程</div>
+        <CourseBox :list="newestList" />
         <el-divider></el-divider>
       </div>
       <div class="course-box_wrapper">
-        <div class="box-title" ref="idx2">
-          最热课程
-        </div>
-        <CourseBox :list="hotList"/>
+        <div class="box-title" ref="idx2">最热课程</div>
+        <CourseBox :list="hotList" />
       </div>
     </div>
     <div class="course-wrapper" v-else>
-      <AllCourse :list="allList"/>
+      <AllCourse :list="allList" />
     </div>
-    <div class="footer">
-        copyright@喵娘大大
-    </div>
+    <div class="footer">copyright@喵娘大大</div>
   </div>
 </template>
 
 <script>
-import Header from '@/components/common/header'
-import Carousel from './Carousel'
-import CourseBox from './CourseBox'
-import AllCourse from './AllCourse'
+import Header from "@/components/common/header";
+import Carousel from "./Carousel";
+import CourseBox from "./CourseBox";
+import AllCourse from "./AllCourse";
 
-import courseServer from '@/api/course.js'
+import courseServer from "@/api/course.js";
 
 export default {
   data() {
@@ -54,20 +49,23 @@ export default {
       newestList: [],
       hotList: [],
       allList: [],
+      carouselList: [],
       loading: true,
-    }
+    };
   },
   methods: {
     toMore() {
       this.ifShowAllCourse = true;
     },
     getVal(el) {
-      if(el == 3) {
+      if (el == 3) {
         this.ifShowAllCourse = true;
       } else {
         let _this = this;
         this.ifShowAllCourse = false;
-        setTimeout(() => {_this.fixScroll(el)}, 50)
+        setTimeout(() => {
+          _this.fixScroll(el);
+        }, 50);
       }
     },
     fixScroll(el) {
@@ -111,70 +109,81 @@ export default {
       window.requestAnimationFrame(step);
     },
     async getData() {
-      const getHot = courseServer.getHot()
-      const getLatest = courseServer.getLatest()
-      const getRecommend = courseServer.getRecommend()
-      Promise.all([getRecommend, getLatest, getHot])
-        .then(res => {
-          [this.recommendList, this.newestList, this.hotList]
-            = [res[0].recommendList, res[1].recommendList, res[2].hotList]
-          // console.log(res);
-        })
-    }
+      const getHot = courseServer.getHot();
+      const getLatest = courseServer.getLatest();
+      const getRecommend = courseServer.getRecommend();
+      const getCarousel = courseServer.getCarousel();
+      Promise.all([getRecommend, getLatest, getHot, getCarousel]).then(
+        (res) => {
+          [
+            this.recommendList,
+            this.newestList,
+            this.hotList,
+            this.carouselList,
+          ] = [
+            res[0].recommendList,
+            res[1].recommendList,
+            res[2].hotList,
+            res[3].data,
+          ];
+          console.log(res);
+        }
+      );
+    },
   },
   components: { Header, Carousel, CourseBox, AllCourse },
   created() {
     // [this.recommendList, this.newestList, this.hotList, this.allList] = [recommendList, newestList, hotList, allList];
     setTimeout(() => {
       this.loading = false;
-    }, 1000)
-    this.getData()
-  }
-}
+    }, 1000);
+    this.getData();
+  },
+};
 </script>
 
 <style scoped lang="less">
-  .wrapper {
-    .header {
-      margin-bottom: 20px;
-    }
+.wrapper {
+  .header {
+    margin-bottom: 20px;
+  }
 
-    .content-wrapper {
-      padding: 0 30px 20px;
+  .content-wrapper {
+    padding: 0 30px 20px;
 
-      .course-box_wrapper {
-        width: 1400px;
-        margin: auto;
+    .course-box_wrapper {
+      width: 1400px;
+      margin: auto;
 
-        .box-title {
-          display: flex;
-          justify-content: space-between;
-          margin-top: 25px ;
-          font-weight: 650;
-          font-style: normal;
-          font-size: 28px;
-          color: rgba(0, 0, 0, 0.847058823529412);
-          line-height: 28px;
+      .box-title {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 25px;
+        font-weight: 650;
+        font-style: normal;
+        font-size: 28px;
+        color: rgba(0, 0, 0, 0.847058823529412);
+        line-height: 28px;
 
-          .more {
-            color: #c9c9c9;
-            font-size: 20px;
-            cursor: pointer;
-            user-select: none;
-          }
+        .more {
+          color: #c9c9c9;
+          font-size: 20px;
+          cursor: pointer;
+          user-select: none;
         }
       }
     }
-
-    .footer {
-      padding: 50px 0 20px;
-      text-align: center;
-      font-family: "Microsoft YaHei";
-      font-weight: 400;
-      font-style: normal;
-      font-size: 14px;
-      color: rgba(0, 0, 0, 0.447);
-      line-height: 21px;
-    }
   }
+
+  .footer {
+    padding: 50px 0 20px;
+    text-align: center;
+    font-family: "Microsoft YaHei";
+    font-weight: 400;
+    font-style: normal;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.447);
+    line-height: 21px;
+  }
+}
 </style>
