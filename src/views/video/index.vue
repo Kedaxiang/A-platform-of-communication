@@ -93,6 +93,13 @@ export default {
       if(res.success) this.userInfo = res.userInfo
       else this.$message.error(res.message)
     },
+    checkToken() {
+      if(!localStorage.getItem('token')) {
+        this.$message.error('请先登录再进入课程详情');
+        this.$router.push('/user')
+        return false
+      }
+    },
     toUser() {
       this.$router.push("/user");
     },
@@ -105,6 +112,7 @@ export default {
     this.ifLogin = localStorage.getItem("ifLogin");
   },
   mounted() {
+    if(!this.checkToken()) return
     this.courseId = this.$route.query.courseId;
     this.fetchCourseDetail(this.courseId);
   },

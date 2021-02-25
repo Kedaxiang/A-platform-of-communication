@@ -2,7 +2,7 @@
   <div class="wrapper">
     <Header class="header" @fromChild="getVal" :ifIndex="true" />
     <div class="content-wrapper" v-if="!ifShowAllCourse">
-      <Carousel :list="carouselList" style="width: 1440px; margin: auto"/>
+      <Carousel :list="carouselList" style="width: 1440px; margin: auto" />
       <!-- <div 
         class="course-box_wrapper" 
         v-loading="loading"
@@ -27,7 +27,7 @@
       </div>
     </div>
     <div class="course-wrapper" v-else>
-      <AllCourse :list="allList" />
+      <AllCourse :ifShowAllCourse="ifShowAllCourse"/>
     </div>
     <div class="footer">copyright@喵娘大大</div>
   </div>
@@ -51,7 +51,19 @@ export default {
       allList: [],
       carouselList: [],
       loading: true,
+      id: -1
     };
+  },
+  watch: {
+    recommendList(val) {
+      this.handleNumber(val, this.recommendList)
+    },
+    newestList(val) {
+      this.handleNumber(val, this.newestList)
+    },
+    hotList(val) {
+      this.handleNumber(val, this.hotList)
+    }
   },
   methods: {
     toMore() {
@@ -130,6 +142,12 @@ export default {
         }
       );
     },
+    handleNumber(val, list) {
+      if (val.length < 3) {
+        list.push({ id: this.id });
+      }
+      this.id--;
+    }
   },
   components: { Header, Carousel, CourseBox, AllCourse },
   created() {
@@ -173,6 +191,11 @@ export default {
         }
       }
     }
+  }
+
+  .course-wrapper {
+    height: 692px;
+    position: relative;
   }
 
   .footer {

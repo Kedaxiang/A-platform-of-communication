@@ -21,7 +21,7 @@ export default {
   props: ["list"],
   methods: {
     toVideo(id) {
-      console.log(id);
+      // console.log(id);
       this.pathInfo.query.courseId = id
       this.$router.push(this.pathInfo)
     }

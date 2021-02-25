@@ -1,6 +1,9 @@
 <template>
   <div class="wrapper">
     <div class="search-box">
+      <div class="back-box" @click="isShowAll || fetchAllCourse()" ref="backBox">
+        <i class="el-icon-back"></i>全部课程列表
+      </div>
       <div class="search">
         <el-input
           placeholder="搜索"
@@ -46,18 +49,32 @@ export default {
       },
       list: [],
       total: 0,
+      id: -1,
+      isShowAll: true
     };
   },
   components: { CourseBox },
-  // props: ['list'],
+  props: ["ifShowAllCourse"],
+  watch: {
+    list(val) {
+      if (val.length < 6) {
+        this.list.push({ id: this.id });
+      }
+      this.id--;
+    },
+  },
   methods: {
     async fetchAllCourse() {
+      this.$refs.backBox.style.opacity = '0'
+      this.isShowAll = true;
       let res = await courseService.getAll(this.pageQuery);
       // console.log(res);
       if (res.success)
         [this.total, this.list] = [res.data.totalCount, res.data.list];
     },
     async searchCourse() {
+      this.$refs.backBox.style.opacity = '1'
+      this.isShowAll = false;
       let res = await courseService.searchCourse({
         name: this.name,
         page: this.pageQuery.page,
@@ -77,7 +94,11 @@ export default {
 
 <style>
 .pagination-wrapper .el-pagination {
-  margin-top: 50px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
   text-align: center;
   background-color: rgba(244, 244, 244, 1);
 }
@@ -88,11 +109,21 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 750px;
+  width: 900px;
   margin: auto;
+
+  .back-box {
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    transition: .3s;
+    color: #ccc;
+    cursor: pointer;
+  }
 
   .search {
     width: 650px;
+    margin-left: 10px;
   }
 }
 </style>

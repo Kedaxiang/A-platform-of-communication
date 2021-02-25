@@ -1,8 +1,14 @@
 import axios from 'axios'
 import Vue from 'vue'
 
-const http_url = '/api';
+let http_url;
 
+if (process.env.NODE_ENV == 'development') {
+    http_url = '/api';
+}
+else {
+    http_url = 'http://www.vtmer2018.top:8066';
+}
 
 // 请求和应答报文数据均采用JSON格式，UTF-8编码
 const instance = axios.create({
