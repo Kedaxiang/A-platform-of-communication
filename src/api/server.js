@@ -24,7 +24,7 @@ Vue.prototype.axios = instance;
 // request拦截器
 instance.interceptors.request.use(config => {
         // console.log('request拦截器', config)
-        let token = localStorage.getItem('token');
+        let token = localStorage.getItem('token')
         if(token) config.headers.Authorization = localStorage.getItem('token')
         return config
     },
@@ -38,6 +38,7 @@ instance.interceptors.request.use(config => {
 //response拦截器
 instance.interceptors.response.use(response => {
     const statusCode = response.status;
+    console.log(response);
     if (statusCode == 200) {
         return response.data;
     } else {
@@ -53,7 +54,7 @@ instance.interceptors.response.use(response => {
         // Do something with request error
         console.log('response拦截器报错', error) // for debug
         Vue.prototype.$message.error("请求出错" + error);
-
+        // Vue.prototype.$message.error('请重新登录');
         return Promise.reject(error)
     })
 

@@ -70,7 +70,7 @@ export default {
           let res = await userService.phoneLogin(this.loginForm);
           console.log(res);
           if (res.success) {
-            localStorage.setItem("ifLogin", true);
+            sessionStorage.setItem("ifLogin", true);
             localStorage.setItem("token", res.userLoginVO.token);
             this.$message.success("登陆成功");
             this.$router.push("/index");

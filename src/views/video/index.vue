@@ -9,8 +9,12 @@
       </div>
       <div class="right-box">
         <div class="btn">
-          <i class="el-icon-question" />
-          帮助
+          <el-tooltip class="item" effect="dark" placement="bottom">
+            <div slot="content">
+              联系我:<br />联系人: 杨霖鑫<br />联系邮箱: 416043959@qq.com
+            </div>
+            <div><i class="el-icon-question" />帮助</div>
+          </el-tooltip>
         </div>
         <div class="btn" @click="toUser" v-if="!ifLogin">登录/注册</div>
         <el-dropdown @command="handleCommand" v-else>
@@ -21,6 +25,7 @@
             <div class="userName">{{ userInfo.name }}</div>
           </div>
           <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="toHome">个人主页</el-dropdown-item>
             <el-dropdown-item command="logout">安全退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -38,10 +43,17 @@
       <div class="video-menu">
         <div class="list-test">
           <div class="test-name">文件下载</div>
-          <el-divider></el-divider>
-          <div class="file-wrapper" v-for="item in courseInfo.resourceUrlList" :key="item">
+          <!-- <el-divider></el-divider> -->
+          <div class="icon-wrapper" v-if="!courseInfo.resourceUrlList">
+            <i class="el-icon-document-delete" style="font-size: 50px; color: #ccc"></i>
+          </div>
+          <div
+            class="file-wrapper"
+            v-for="item in courseInfo.resourceUrlList"
+            :key="item"
+          >
             <div class="file">
-              文件
+              {{ JSON.parse(item).name }}
               <el-button type="primary" @click="download(item)">下载</el-button>
             </div>
             <el-divider></el-divider>
@@ -90,29 +102,31 @@ export default {
     },
     async fetchUserInfo() {
       let res = await userService.getUserInfo();
-      if(res.success) this.userInfo = res.userInfo
-      else this.$message.error(res.message)
+      if (res.success) this.userInfo = res.userInfo;
+      else this.$message.error(res.message);
     },
     checkToken() {
-      if(!localStorage.getItem('token')) {
-        this.$message.error('请先登录再进入课程详情');
-        this.$router.push('/user')
-        return false
+      if (!localStorage.getItem("token")) {
+        this.$message.error("请先登录再进入课程详情");
+        this.$router.push("/user");
+        return false;
       }
+      return true;
     },
     toUser() {
       this.$router.push("/user");
     },
-    download(url) {
-      console.log('下载文件');
-      window.open(url)
-    }
+    download(item) {
+      // console.log('下载文件');
+      let url = JSON.parse(item).response.fileUrl;
+      window.open(url);
+    },
   },
   created() {
-    this.ifLogin = localStorage.getItem("ifLogin");
+    this.ifLogin = sessionStorage.getItem("ifLogin");
   },
   mounted() {
-    if(!this.checkToken()) return
+    if (!this.checkToken()) return;
     this.courseId = this.$route.query.courseId;
     this.fetchCourseDetail(this.courseId);
   },
@@ -304,16 +318,28 @@ export default {
 
       .list-test {
         background-color: #fff;
+        height: 100%;
 
         .test-name {
-          text-align: center;
-          padding-top: 30px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100px;
+          margin-bottom: 30px;
+          border-bottom: 1px solid #ccc;
           font-size: 20px;
           font-weight: 600;
         }
 
+        .icon-wrapper {
+          height: calc(100% - 130px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
         .file-wrapper {
-          // height: 50px;
+          height: calc(100% - 130px);
 
           .file {
             display: flex;

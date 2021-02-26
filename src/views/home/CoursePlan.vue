@@ -21,7 +21,7 @@
               </div>
             </div>
             <div class="info-right">
-              <div class="course-menu">进度</div>
+              <div class="course-menu">已学习</div>
             </div>
           </div>
         </div>
@@ -62,7 +62,7 @@ export default {
     async fetchRecordList() {
       let { page, size } = this.pageQuery;
       let res = await userService.getUserRecord(page, size);
-      // console.log(res);
+      console.log(res);
       if(res.success) [this.total, this.list] = [res.data.totalCount, res.data.list];
     },
   },
@@ -146,6 +146,10 @@ export default {
         .info-right {
           height: 90px;
           line-height: 90px;
+
+          .course-menu {
+            color: #ccc;
+          }
         }
       }
     }

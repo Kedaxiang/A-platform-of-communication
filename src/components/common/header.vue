@@ -18,8 +18,12 @@
       </div>
       <div class="right-box">
         <div class="btn">
-          <i class="el-icon-question"/>
-          帮助
+          <el-tooltip class="item" effect="dark" placement="bottom">
+            <div slot="content">联系我:<br/>联系人: 杨霖鑫<br/>联系邮箱: 416043959@qq.com</div>
+            <div>
+              <i class="el-icon-question"/>帮助
+            </div>
+          </el-tooltip>
         </div>
         <div class="btn"  @click="toUser" v-if="!ifLogin">
           登录/注册
@@ -140,7 +144,7 @@ export default {
     }
   },
   created() {
-    this.ifLogin = localStorage.getItem("ifLogin")
+    this.ifLogin = sessionStorage.getItem("ifLogin")
   }
 }
 </script>
