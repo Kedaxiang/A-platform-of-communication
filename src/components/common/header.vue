@@ -4,36 +4,38 @@
     <div class="header" v-if="ifIndex">
       <div class="left-box">
         <div class="logo" @click="toIndex">
-          GDUT Elearning 
+          GDUT Elearning
         </div>
         <div class="tabs-wrapper">
-            <div class="tab" 
-                 v-for="(item, index) in tabs"
-                 :key="index"
-                 :class="{selected: idx == 3 && index == 3}"
-                 @click="tabsClick(index)">
-                <span>{{item.title}}</span>
-            </div>
+          <div
+            class="tab"
+            v-for="(item, index) in tabs"
+            :key="index"
+            :class="{ selected: idx == 3 && index == 3 }"
+            @click="tabsClick(index)"
+          >
+            <span>{{ item.title }}</span>
           </div>
+        </div>
       </div>
       <div class="right-box">
         <div class="btn">
           <el-tooltip class="item" effect="dark" placement="bottom">
-            <div slot="content">联系我:<br/>联系人: 杨霖鑫<br/>联系邮箱: 416043959@qq.com</div>
-            <div>
-              <i class="el-icon-question"/>帮助
+            <div slot="content">
+              联系我:<br />联系人: 王雁海<br />联系邮箱: 826107601@qq.com
             </div>
+            <div><i class="el-icon-question" />帮助</div>
           </el-tooltip>
         </div>
-        <div class="btn"  @click="toUser" v-if="!ifLogin">
+        <div class="btn" @click="toUser" v-if="!ifLogin">
           登录/注册
         </div>
         <el-dropdown @command="handleCommand" v-else>
           <div class="user el-dropdown-link">
             <div class="avatar">
-              <img :src="userInfo.headPortrait" alt="">
+              <img :src="userInfo.headPortrait" alt="" />
             </div>
-            <div class="userName">{{userInfo.name}}</div>
+            <div class="userName">{{ userInfo.name }}</div>
           </div>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="toHome">个人主页</el-dropdown-item>
@@ -52,18 +54,18 @@
       </div>
       <div class="right-box">
         <div class="btn">
-          <i class="el-icon-question"/>
+          <i class="el-icon-question" />
           帮助
         </div>
-        <div class="btn"  @click="toUser" v-if="!ifLogin">
+        <div class="btn" @click="toUser" v-if="!ifLogin">
           登录/注册
         </div>
         <el-dropdown @command="handleCommand" v-else>
           <div class="user el-dropdown-link">
             <div class="avatar">
-              <img :src="userInfo.headPortrait" alt="">
+              <img :src="userInfo.headPortrait" alt="" />
             </div>
-            <div class="userName">{{userInfo.name}}</div>
+            <div class="userName">{{ userInfo.name }}</div>
           </div>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="logout">安全退出</el-dropdown-item>
@@ -75,7 +77,7 @@
 </template>
 
 <script>
-import userService from '@/api/user.js'
+import userService from "@/api/user.js";
 
 export default {
   data() {
@@ -84,196 +86,192 @@ export default {
       idx: 0,
       tabs: [
         {
-          title: '编辑推荐',
+          title: "编辑推荐",
         },
         {
-          title: '最新课程',
+          title: "最新课程",
         },
         {
-          title: '最热课程',
+          title: "最热课程",
         },
         {
-          title: '全部课程',
+          title: "全部课程",
         },
       ],
-      userInfo: {}
-    }
+      userInfo: {},
+    };
   },
-  props: ['ifIndex'],
+  props: ["ifIndex"],
   computed: {
     listenIsChangeAvatar() {
-      return this.$store.state.isChangeAvatar
-    }
+      return this.$store.state.isChangeAvatar;
+    },
   },
   watch: {
     ifLogin(val) {
-      if(val) this.fetchUserInfo();
+      if (val) this.fetchUserInfo();
     },
     listenIsChangeAvatar(val) {
-      if(val) {
+      if (val) {
         this.fetchUserInfo();
-        this.$store.commit('changeAvatarFinish')
+        this.$store.commit("changeAvatarFinish");
       }
-    }
+    },
   },
   methods: {
     tabsClick(index) {
       this.idx = index;
-      this.$emit('fromChild', index)
+      this.$emit("fromChild", index);
     },
     toUser() {
-      this.$router.push('/user')
+      this.$router.push("/user");
     },
     handleCommand(command) {
-      if(command == 'logout') {
+      if (command == "logout") {
         localStorage.clear();
         this.ifLogin = false;
-        if(this.$route.name == 'home') this.$router.push('/user')
-        this.$message.success('退出成功')
+        if (this.$route.name == "home") this.$router.push("/user");
+        this.$message.success("退出成功");
       } else {
-        this.$router.push('/home')
+        this.$router.push("/home");
       }
     },
     toIndex() {
-      this.$router.push('/index')
+      this.$router.push("/index");
     },
     async fetchUserInfo() {
       let res = await userService.getUserInfo();
-      if(res.success) this.userInfo = res.userInfo
-      else this.$message.error(res.message)
-    }
+      if (res.success) this.userInfo = res.userInfo;
+      else this.$message.error(res.message);
+    },
   },
   created() {
-    this.ifLogin = sessionStorage.getItem("ifLogin")
-  }
-}
+    this.ifLogin = sessionStorage.getItem("ifLogin");
+  },
+};
 </script>
 
 <style lang="less" scoped>
-  .header {
-    width: 100%;
-    height: 64px;
-    background-color: rgb(63, 63, 63);
+.header {
+  width: 100%;
+  height: 64px;
+  background-color: rgb(63, 63, 63);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 100px;
+
+  .left-box {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding: 0 100px;
+    align-items: center;
 
-
-    .left-box {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      .logo {
-        user-select: none;
-        cursor: pointer;
-        width: 140px;
-        margin-right: 30px;
-        height: 32px;
-        line-height: 32px;
-        text-align: center;
-        background: inherit;
-        background-color: rgba(255, 255, 255, 0.458823529411765);
-        border: none;
-        border-radius: 4px;
-        -moz-box-shadow: none;
-        -webkit-box-shadow: none;
-        box-shadow: none;
-        font-size: 12px;
-        color: #FFFFFF;
-      }
-
-      .tabs-wrapper {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        .tab {
-          user-select:none;
-          width: 104px;
-          height: 64px;
-          line-height: 64px;
-          text-align: center;
-          font-weight: 400;
-          font-style: normal;
-          font-size: 14px;
-          color: rgba(255, 255, 255, 0.447058823529412);
-
-        }
-      }
+    .logo {
+      user-select: none;
+      cursor: pointer;
+      width: 140px;
+      margin-right: 30px;
+      height: 32px;
+      line-height: 32px;
+      text-align: center;
+      background: inherit;
+      background-color: rgba(255, 255, 255, 0.458823529411765);
+      border: none;
+      border-radius: 4px;
+      -moz-box-shadow: none;
+      -webkit-box-shadow: none;
+      box-shadow: none;
+      font-size: 12px;
+      color: #ffffff;
     }
 
-    .right-box {
+    .tabs-wrapper {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      width: 180px;
 
-      .btn {
-        user-select:none;
-        cursor: pointer;
+      .tab {
+        user-select: none;
+        width: 104px;
+        height: 64px;
+        line-height: 64px;
+        text-align: center;
+        font-weight: 400;
+        font-style: normal;
         font-size: 14px;
         color: rgba(255, 255, 255, 0.447058823529412);
       }
-
-      .user {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100px;
-        cursor: pointer;
-
-        .avatar {
-          border-width: 0px;
-          width: 32px;
-          height: 32px;
-          background-color: rgba(255, 255, 255, 0.458823529411765);
-          border: none;
-          border-radius: 50%;
-          -moz-box-shadow: none;
-          -webkit-box-shadow: none;
-          box-shadow: none;
-          font-size: 18px;
-          color: #FFFFFF;
-          overflow: hidden;
-
-          img {
-            width: 100%;
-            height: 100%;
-          }
-        }
-
-        .userName {
-          font-family: 'Microsoft YaHei';
-          font-weight: 400;
-          font-style: normal;
-          font-size: 14px;
-          color: rgba(255, 255, 255, 0.447058823529412);
-          text-align: left;
-          overflow: hidden;
-          width: 60px;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-      }
     }
   }
 
-  span:hover {
-    cursor: pointer;
-    color: #fff !important;   
-  }
+  .right-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 180px;
 
-  .selected {
-    color: #fff !important;   
+    .btn {
+      user-select: none;
+      cursor: pointer;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.447058823529412);
+    }
+
+    .user {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100px;
+      cursor: pointer;
+
+      .avatar {
+        border-width: 0px;
+        width: 32px;
+        height: 32px;
+        background-color: rgba(255, 255, 255, 0.458823529411765);
+        border: none;
+        border-radius: 50%;
+        -moz-box-shadow: none;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+        font-size: 18px;
+        color: #ffffff;
+        overflow: hidden;
+
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .userName {
+        font-family: "Microsoft YaHei";
+        font-weight: 400;
+        font-style: normal;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.447058823529412);
+        text-align: left;
+        overflow: hidden;
+        width: 60px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
   }
+}
+
+span:hover {
+  cursor: pointer;
+  color: #fff !important;
+}
+
+.selected {
+  color: #fff !important;
+}
 </style>
 
 <style>
-
 .el-dropdown-menu__item {
   width: 100px;
 }
-
 </style>

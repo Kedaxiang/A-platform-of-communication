@@ -1,7 +1,30 @@
 <template>
   <div class="box-wrapper">
-    <div class="course-box" v-for="item in list" :key="item.id">
-      <div v-if="item.id > 0">
+    <div class="float-left_box">
+      <div
+        class="pic-box"
+        @mouseover="showCover(list[0].id)"
+        @mouseout="preset()"
+        @click="toVideo(list[0].id)"
+      >
+        <div class="cover">
+          <i class="el-icon-video-play"></i>
+        </div>
+        <img :src="list[0].picUrl" alt="" />
+      </div>
+      <div class="title">
+        <span>{{ list[0].title }}</span>
+      </div>
+      <div class="intro">
+        <span>{{ list[0].intro }}</span>
+      </div>
+    </div>
+    <ul>
+      <li
+        class="course-box"
+        v-for="item in list.slice(1, list.length)"
+        :key="item.id"
+      >
         <div
           class="pic-box"
           @mouseover="showCover(item.id)"
@@ -11,16 +34,16 @@
           <div class="cover">
             <i class="el-icon-video-play"></i>
           </div>
-          <img :src="item.pictureUrl" alt="" />
+          <img :src="item.picUrl" alt="" />
         </div>
         <div class="title">
-          <span>{{ item.name }}</span>
+          <span>{{ item.title }}</span>
         </div>
         <div class="intro">
-          <span>{{ item.introduction }}</span>
+          <span>{{ item.intro }}</span>
         </div>
-      </div>
-    </div>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -55,26 +78,45 @@ export default {
 
 <style scoped lang="less">
 .box-wrapper {
-  display: flex;
-  justify-content: space-between;
   margin: auto;
-  width: 1440px;
-  flex-wrap: wrap;
-  align-items: center;
-  padding: 10px 20px;
+  height: 428px;
 
-  .course-box {
-    width: 400px;
-    height: 255px;
-    margin-top: 20px;
-    margin-left: 20px;
+  .float-left_box {
+    width: 500px;
+    height: 100%;
+    float: left;
+    margin: 20px 20px 0 0;
+    position: relative;
+    cursor: pointer;
 
     .pic-box {
-      width: 400px;
-      height: 196px;
+      width: 500px;
+      height: 280px;
       overflow: hidden;
       position: relative;
       cursor: pointer;
+
+      .cover {
+        visibility: hidden;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 60px;
+        background: rgba(0, 0, 0, 0.6);
+        transition: all 0.8s;
+        z-index: 999;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        transition: all 0.8s;
+      }
 
       &:hover {
         img {
@@ -96,6 +138,44 @@ export default {
           background: rgba(0, 0, 0, 0.6);
         }
       }
+    }
+
+    .title {
+      line-height: 34px;
+      margin-top: 10px;
+      font-size: 24px;
+      overflow: hidden;
+      width: 500px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: 650;
+    }
+
+    .intro {
+      line-height: 20px;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #9c9c9c;
+      overflow: hidden;
+      width: 240px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .course-box {
+    width: 240px;
+    height: 200px;
+    margin-top: 20px;
+    margin-left: 20px;
+    float: left;
+
+    .pic-box {
+      width: 240px;
+      height: 135px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
 
       .cover {
         visibility: hidden;
@@ -109,14 +189,14 @@ export default {
         color: #fff;
         font-size: 60px;
         background: rgba(0, 0, 0, 0.6);
-        transition: all 0.5s;
+        transition: all 0.8s;
         z-index: 999;
       }
 
       img {
         width: 100%;
         height: 100%;
-        transition: all 0.5s;
+        transition: all 0.8s;
       }
     }
 
@@ -140,6 +220,27 @@ export default {
       width: 240px;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+
+    &:hover {
+      img {
+        transform: scale(1.2);
+        background-color: #fff;
+      }
+
+      .cover {
+        visibility: visible;
+        opacity: 1;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 60px;
+        background: rgba(0, 0, 0, 0.6);
+      }
     }
   }
 }

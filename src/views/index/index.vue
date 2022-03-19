@@ -10,26 +10,22 @@
         element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(244, 244, 244, .8)">  -->
       <div class="course-box_wrapper">
-        <div class="box-title" ref="idx0">
-          <div>编辑推荐</div>
-        </div>
-        <CourseBox :list="recommendList" />
-        <el-divider></el-divider>
-      </div>
-      <div class="course-box_wrapper">
-        <div class="box-title" ref="idx1">最新课程</div>
-        <CourseBox :list="newestList" />
-        <el-divider></el-divider>
-      </div>
-      <div class="course-box_wrapper">
-        <div class="box-title" ref="idx2">最热课程</div>
+        <div class="box-title" ref="idx1">热门课程</div>
         <CourseBox :list="hotList" />
+        <el-divider></el-divider>
+      </div>
+      <div class="discuss-box_wrapper">
+        <div class="item-box">
+          <div class="box-title" ref="idx1">热门讨论</div>
+          <DiscussBox :list="hotDicussList" :type="'discuss-item'" />
+        </div>
+        <div class="item-box">
+          <div class="box-title" ref="idx1">公告</div>
+          <DiscussBox :list="noticeList" :type="'notice-item'" />
+        </div>
       </div>
     </div>
-    <div class="course-wrapper" v-else>
-      <AllCourse :ifShowAllCourse="ifShowAllCourse"/>
-    </div>
-    <div class="footer">copyright@喵娘大大</div>
+    <el-footer>copyright@wangyanhai</el-footer>
   </div>
 </template>
 
@@ -38,32 +34,38 @@ import Header from "@/components/common/header";
 import Carousel from "./Carousel";
 import CourseBox from "./CourseBox";
 import AllCourse from "./AllCourse";
+import DiscussBox from "./discussBox.vue";
 
 import courseServer from "@/api/course.js";
+import {
+  carouselList,
+  hotList,
+  hotDicussList,
+  noticeList,
+} from "@/assets/util/data.js";
 
 export default {
   data() {
     return {
       ifShowAllCourse: false,
-      recommendList: [],
-      newestList: [],
-      hotList: [],
-      allList: [],
-      carouselList: [],
+      hotList: [], // 热门课程
+      carouselList: [], // 轮播图
+      hotDicussList: [], // 热门讨论列表
+      noticeList: [], // 公告列表
       loading: true,
-      id: -1
+      id: -1,
     };
   },
   watch: {
     recommendList(val) {
-      this.handleNumber(val, this.recommendList)
+      this.handleNumber(val, this.recommendList);
     },
     newestList(val) {
-      this.handleNumber(val, this.newestList)
+      this.handleNumber(val, this.newestList);
     },
     hotList(val) {
-      this.handleNumber(val, this.hotList)
-    }
+      this.handleNumber(val, this.hotList);
+    },
   },
   methods: {
     toMore() {
@@ -147,15 +149,20 @@ export default {
         list.push({ id: this.id });
       }
       this.id--;
-    }
+    },
   },
-  components: { Header, Carousel, CourseBox, AllCourse },
+  components: { Header, Carousel, CourseBox, AllCourse, DiscussBox },
   created() {
+    console.log(hotList);
+    this.carouselList = carouselList;
+    this.hotList = hotList;
+    this.noticeList = noticeList;
+    this.hotDicussList = hotDicussList;
     // [this.recommendList, this.newestList, this.hotList, this.allList] = [recommendList, newestList, hotList, allList];
     setTimeout(() => {
       this.loading = false;
     }, 1000);
-    this.getData();
+    // this.getData();
   },
 };
 </script>
@@ -170,25 +177,40 @@ export default {
     padding: 0 30px 20px;
 
     .course-box_wrapper {
-      width: 1400px;
+      width: 1300px;
       margin: auto;
+    }
 
-      .box-title {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 25px;
-        font-weight: 650;
-        font-style: normal;
-        font-size: 28px;
-        color: rgba(0, 0, 0, 0.847058823529412);
-        line-height: 28px;
+    .discuss-box_wrapper {
+      width: 1300px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
 
-        .more {
-          color: #c9c9c9;
-          font-size: 20px;
-          cursor: pointer;
-          user-select: none;
+      .item-box {
+        width: 45%;
+
+        .box-title {
+          width: 100%;
         }
+      }
+    }
+
+    .box-title {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 25px;
+      font-weight: 650;
+      font-style: normal;
+      font-size: 28px;
+      color: rgba(0, 0, 0, 0.847058823529412);
+      line-height: 28px;
+
+      .more {
+        color: #c9c9c9;
+        font-size: 20px;
+        cursor: pointer;
+        user-select: none;
       }
     }
   }
@@ -199,14 +221,35 @@ export default {
   }
 
   .footer {
-    padding: 50px 0 20px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 100%;
+    height: 172px;
+    background-color: #1d1d1d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     font-family: "Microsoft YaHei";
     font-weight: 400;
     font-style: normal;
     font-size: 14px;
-    color: rgba(0, 0, 0, 0.447);
+    color: #9e9e9e;
     line-height: 21px;
   }
+}
+</style>
+
+<style>
+.el-footer {
+  height: 172px !important;
+  background-color: #1d1d1d;
+  color: #9e9e9e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

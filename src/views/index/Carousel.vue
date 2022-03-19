@@ -1,7 +1,7 @@
 <template>
   <el-carousel :interval="4000" type="card" height="300px" trigger="click">
     <el-carousel-item v-for="item in list" :key="item.id">
-      <img :src="item.photoUrl" alt="" @click="toVideo(item.courseId)"/>
+      <img :src="item.picUrl" alt="" @click="toVideo(item.courseId)" />
     </el-carousel-item>
   </el-carousel>
 </template>
@@ -11,21 +11,21 @@ export default {
   data() {
     return {
       pathInfo: {
-        path: 'videoStudy',
+        path: "videoStudy",
         query: {
-          courseId: ''
-        }
-      }
-    }
+          courseId: "",
+        },
+      },
+    };
   },
   props: ["list"],
   methods: {
     toVideo(id) {
       // console.log(id);
-      this.pathInfo.query.courseId = id
-      this.$router.push(this.pathInfo)
-    }
-  }
+      this.pathInfo.query.courseId = id;
+      this.$router.push(this.pathInfo);
+    },
+  },
 };
 </script>
 
