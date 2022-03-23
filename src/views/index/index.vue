@@ -25,12 +25,13 @@
         </div>
       </div>
     </div>
-    <el-footer>copyright@wangyanhai</el-footer>
+    <Footer />
   </div>
 </template>
 
 <script>
 import Header from "@/components/common/header";
+import Footer from "@/components/common/Footer";
 import Carousel from "./Carousel";
 import CourseBox from "./CourseBox";
 import AllCourse from "./AllCourse";
@@ -151,7 +152,7 @@ export default {
       this.id--;
     },
   },
-  components: { Header, Carousel, CourseBox, AllCourse, DiscussBox },
+  components: { Header, Carousel, CourseBox, AllCourse, DiscussBox, Footer },
   created() {
     console.log(hotList);
     this.carouselList = carouselList;
@@ -240,16 +241,5 @@ export default {
     color: #9e9e9e;
     line-height: 21px;
   }
-}
-</style>
-
-<style>
-.el-footer {
-  height: 172px !important;
-  background-color: #1d1d1d;
-  color: #9e9e9e;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 </style>

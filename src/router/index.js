@@ -1,33 +1,43 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Vue from "vue";
+import VueRouter from "vue-router";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
-    redirect: 'index'
+    path: "/",
+    redirect: "index",
   },
   {
-    path: '/index',
-    name: 'index',
-    component: () => import ('@/views/index/index')
+    path: "/index",
+    name: "index",
+    component: () => import("@/views/index/index"),
   },
   {
-    path: '/user',
-    name: 'user',
-    component: () => import ('@/views/user/index')
+    path: "/user",
+    name: "user",
+    component: () => import("@/views/user/index"),
   },
   {
-    path: '/home',
-    name: 'home',
-    component: () => import ('@/views/home/index')
+    path: "/home",
+    name: "home",
+    component: () => import("@/views/home/index"),
   },
   {
-    path: '/videoStudy',
-    name: 'videoStudy',
-    component: () => import ('@/views/video/index')
-  }
+    path: "/videoStudy",
+    name: "videoStudy",
+    component: () => import("@/views/video/index"),
+  },
+  {
+    path: "/discuss",
+    name: "discuss",
+    component: () => import("@/views/discuss/index"),
+  },
+  {
+    path: "/publish",
+    name: "publish",
+    component: () => import("@/views/discuss/publishPosts"),
+  },
   // {
   //   path: '/about',
   //   name: 'About',
@@ -36,12 +46,12 @@ const routes = [
   //   // which is lazy-loaded when the route is visited.
   //   component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   // }
-]
+];
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;

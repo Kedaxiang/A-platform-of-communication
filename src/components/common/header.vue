@@ -11,8 +11,8 @@
             class="tab"
             v-for="(item, index) in tabs"
             :key="index"
-            :class="{ selected: idx == 3 && index == 3 }"
-            @click="tabsClick(index)"
+            :class="{ selected: idx == 0 && index == 0 }"
+            @click="tabsClick(item.route, index)"
           >
             <span>{{ item.title }}</span>
           </div>
@@ -86,16 +86,19 @@ export default {
       idx: 0,
       tabs: [
         {
-          title: "编辑推荐",
+          // title: "编辑推荐",
+          title: "首页",
+          route: "/index",
         },
         {
-          title: "最新课程",
+          // title: "最新课程",
+          title: "讨论区",
+          route: "/discuss",
         },
         {
-          title: "最热课程",
-        },
-        {
-          title: "全部课程",
+          // title: "最热课程",
+          title: "课程",
+          route: "/course",
         },
       ],
       userInfo: {},
@@ -119,9 +122,9 @@ export default {
     },
   },
   methods: {
-    tabsClick(index) {
+    tabsClick(route, index) {
       this.idx = index;
-      this.$emit("fromChild", index);
+      this.$router.push(route);
     },
     toUser() {
       this.$router.push("/user");

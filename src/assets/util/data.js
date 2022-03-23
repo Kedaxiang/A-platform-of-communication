@@ -228,6 +228,75 @@ const noticeList = [
   },
 ];
 
+const dynamicList = [
+  {
+    avatar: "",
+    author: "1号",
+    class: "2018级电子信息类2班",
+    content: "动态动态动态动态动态动态动态动态动态动态动态",
+    likes: 10,
+    isLike: false,
+    comments: [
+      {
+        avatar: "",
+        author: "评论1号",
+        time: "2022-02-16 23:59:59",
+        content: "评论内容评论内容评论内容评论内容",
+      },
+      {
+        avatar: "",
+        author: "评论2号",
+        time: "2022-03-29 23:59:59",
+        content: "评论内容2评论内容2",
+      },
+    ],
+  },
+  {
+    avatar: "",
+    author: "2号",
+    class: "2018级电子信息类2班",
+    content: "动态动态动态动态动态动态动态动态动态动态动态",
+    likes: 4,
+    isLike: false,
+    comments: [
+      {
+        avatar: "",
+        author: "评论3号",
+        time: "2022-02-16 23:59:59",
+        content: "评论内容评论内容评论内容评论内容",
+      },
+      {
+        avatar: "",
+        author: "评论4号",
+        time: "2022-03-29 23:59:59",
+        content: "评论内容2评论内容2",
+      },
+    ],
+  },
+  {
+    avatar: "",
+    author: "3号",
+    class: "2018级电子信息类2班",
+    content: "动态动态动态动态动态动态动态动态动态动态动态",
+    likes: 8,
+    isLike: true,
+    comments: [
+      {
+        avatar: "",
+        author: "评论5号",
+        time: "2022-02-16 23:59:59",
+        content: "评论内容评论内容评论内容评论内容",
+      },
+      {
+        avatar: "",
+        author: "评论6号",
+        time: "2022-03-29 23:59:59",
+        content: "评论内容2评论内容2",
+      },
+    ],
+  },
+];
+
 export {
   recommendList,
   newestList,
@@ -236,4 +305,5 @@ export {
   carouselList,
   hotDicussList,
   noticeList,
+  dynamicList,
 };
