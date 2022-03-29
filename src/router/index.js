@@ -38,6 +38,16 @@ const routes = [
     name: "publish",
     component: () => import("@/views/discuss/publishPosts"),
   },
+  {
+    path: "/course",
+    name: "course",
+    component: () => import("@/views/course/index"),
+  },
+  {
+    path: "/post",
+    name: "post",
+    component: () => import("@/views/discuss/post"),
+  },
   // {
   //   path: '/about',
   //   name: 'About',

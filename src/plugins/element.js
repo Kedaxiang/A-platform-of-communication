@@ -31,6 +31,8 @@ import {
   Progress,
   Tooltip,
   Footer,
+  Cascader,
+  Switch,
 } from "element-ui";
 
 //由于Message组件并没有install 方法供Vue来操作的，是直接返回的，因此按照官方文档单独引入的方法是
@@ -96,4 +98,8 @@ Vue
   //文字提示
   .use(Tooltip)
   //页尾
-  .use(Footer);
+  .use(Footer)
+  // 级联选择器
+  .use(Cascader)
+  // 开关
+  .use(Switch);

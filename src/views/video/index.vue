@@ -1,70 +1,77 @@
 <template>
   <div class="wrapper">
-    <div class="header">
-      <div class="left-box">
-        <div class="logo" @click="toIndex">
-          <i class="el-icon-arrow-left"></i>
-          返回主页
-        </div>
-      </div>
-      <div class="right-box">
-        <div class="btn">
-          <el-tooltip class="item" effect="dark" placement="bottom">
-            <div slot="content">
-              联系我:<br />联系人: 杨霖鑫<br />联系邮箱: 416043959@qq.com
-            </div>
-            <div><i class="el-icon-question" />帮助</div>
-          </el-tooltip>
-        </div>
-        <div class="btn" @click="toUser" v-if="!ifLogin">登录/注册</div>
-        <el-dropdown @command="handleCommand" v-else>
-          <div class="user el-dropdown-link">
-            <div class="avatar">
-              <img :src="userInfo.headPortrait" alt="" />
-            </div>
-            <div class="userName">{{ userInfo.name }}</div>
-          </div>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="toHome">个人主页</el-dropdown-item>
-            <el-dropdown-item command="logout">安全退出</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </div>
-    </div>
+    <Header :ifIndex="false" />
     <div class="content">
       <div class="video-box">
         <div class="title">
           <span class="chapter">{{ courseInfo.name }}</span>
         </div>
         <div class="video">
-          <video :src="courseInfo.videoUrl" autoplay controls="controls" />
+          <video
+            :src="courseInfo.courseList[currentCourseIdx].videoUrl"
+            autoplay
+            controls="controls"
+          />
         </div>
       </div>
       <div class="video-menu">
         <div class="list-test">
-          <div class="test-name">文件下载</div>
-          <!-- <el-divider></el-divider> -->
-          <div class="icon-wrapper" v-if="!courseInfo.resourceUrlList">
-            <i class="el-icon-document-delete" style="font-size: 50px; color: #ccc"></i>
-          </div>
-          <div
-            class="file-wrapper"
-            v-for="item in courseInfo.resourceUrlList"
-            :key="item"
-          >
-            <div class="file">
-              {{ JSON.parse(item).name }}
-              <el-button type="primary" @click="download(item)">下载</el-button>
+          <div class="test-name">课程列表</div>
+          <div class="list-wrapper">
+            <div
+              class="episode-box"
+              v-for="(item, index) in courseInfo.courseList"
+              :key="item.title"
+              :class="{ current: index == currentCourseIdx }"
+            >
+              <span @click="switchEpisode(index)"
+                >第{{ index + 1 }}集：{{ item.title }}</span
+              >
             </div>
-            <el-divider></el-divider>
           </div>
         </div>
       </div>
     </div>
+    <div class="below-box">
+      <div class="comment-wrapper">
+        <div class="title">
+          评论 <span class="number">{{ commentList.length }}</span>
+        </div>
+        <div
+          class="comment-box"
+          v-for="item in commentList"
+          :key="item.content"
+        >
+          <div class="user-box">
+            <div class="avatar-box">
+              <img :src="item.avatar" alt="" v-if="item.avatar" />
+            </div>
+            <div class="comment-content">
+              <div class="username">{{ item.username }}</div>
+              <div class="comment">{{ item.content }}</div>
+            </div>
+          </div>
+          <el-divider></el-divider>
+        </div>
+      </div>
+      <div class="ppt-box">
+        本集ppt资源：
+        <el-button
+          type="primary"
+          v-if="courseInfo.courseList[currentCourseIdx].fileUrl"
+        >
+          下载
+        </el-button>
+        <span v-else>暂无资源</span>
+      </div>
+    </div>
+    <Footer />
   </div>
 </template>
 
 <script>
+import Header from "@/components/common/header";
+import Footer from "@/components/common/Footer";
 import courseService from "@/api/course.js";
 import userService from "@/api/user.js";
 
@@ -73,10 +80,48 @@ export default {
     return {
       ifLogin: false,
       courseId: "",
-      courseInfo: {},
+      currentCourseIdx: 0,
+      courseInfo: {
+        name: "课程标题",
+        courseList: [
+          {
+            title: "分集1标题",
+            videoUrl: "",
+            fileUrl: "",
+          },
+          {
+            title: "分集2标题",
+            videoUrl: "",
+            fileUrl: "",
+          },
+          {
+            title: "分集3标题",
+            videoUrl: "",
+            fileUrl: "",
+          },
+        ],
+      },
+      commentList: [
+        {
+          avatar: "",
+          username: "用户1",
+          content: "评论内容",
+        },
+        {
+          avatar: "",
+          username: "用户2",
+          content: "撒大声地骄傲发打上单偶发收件人第哦亲我佛阿斯加德",
+        },
+        {
+          avatar: "",
+          username: "用户3",
+          content: "阿萨德请我地闹市口魔法老师度发的",
+        },
+      ],
       userInfo: {},
     };
   },
+  components: { Header, Footer },
   watch: {
     ifLogin(val) {
       if (val) this.fetchUserInfo();
@@ -121,12 +166,16 @@ export default {
       let url = JSON.parse(item).response.fileUrl;
       window.open(url);
     },
+    switchEpisode(idx) {
+      this.currentCourseIdx = idx;
+    },
   },
   created() {
     this.ifLogin = sessionStorage.getItem("ifLogin");
   },
   mounted() {
-    if (!this.checkToken()) return;
+    // 通过课程id获取课程详情以及评论数
+    // if (!this.checkToken()) return;
     this.courseId = this.$route.query.courseId;
     this.fetchCourseDetail(this.courseId);
   },
@@ -136,121 +185,11 @@ export default {
 <style lang="less" scoped>
 .wrapper {
   height: calc(100% - 64px);
-  .header {
-    width: 100%;
-    height: 64px;
-    background-color: rgb(63, 63, 63);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 100px;
-
-    .left-box {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      .logo {
-        user-select: none;
-        cursor: pointer;
-        width: 140px;
-        margin-right: 30px;
-        height: 32px;
-        line-height: 32px;
-        text-align: center;
-        background: inherit;
-        background-color: rgba(255, 255, 255, 0.458823529411765);
-        border: none;
-        border-radius: 4px;
-        -moz-box-shadow: none;
-        -webkit-box-shadow: none;
-        box-shadow: none;
-        font-size: 12px;
-        color: #ffffff;
-      }
-
-      .tabs-wrapper {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        .tab {
-          user-select: none;
-          width: 104px;
-          height: 64px;
-          line-height: 64px;
-          text-align: center;
-          font-weight: 400;
-          font-style: normal;
-          font-size: 14px;
-          color: rgba(255, 255, 255, 0.447058823529412);
-        }
-      }
-    }
-
-    .center-box {
-      color: rgba(255, 255, 255, 0.447058823529412);
-      font-size: 20px;
-    }
-
-    .right-box {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 180px;
-
-      .btn {
-        user-select: none;
-        cursor: pointer;
-        font-size: 14px;
-        color: rgba(255, 255, 255, 0.447058823529412);
-      }
-
-      .user {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100px;
-        cursor: pointer;
-
-        .avatar {
-          border-width: 0px;
-          width: 32px;
-          height: 32px;
-          background-color: rgba(255, 255, 255, 0.458823529411765);
-          border: none;
-          border-radius: 15px;
-          -moz-box-shadow: none;
-          -webkit-box-shadow: none;
-          box-shadow: none;
-          font-size: 18px;
-          color: #ffffff;
-          overflow: hidden;
-
-          img {
-            width: 100%;
-            height: 100%;
-          }
-        }
-
-        .userName {
-          font-family: "Microsoft YaHei";
-          font-weight: 400;
-          font-style: normal;
-          font-size: 14px;
-          color: rgba(255, 255, 255, 0.447058823529412);
-          text-align: left;
-          overflow: hidden;
-          width: 60px;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-      }
-    }
-  }
   .content {
     position: relative;
     height: 100%;
+    width: 1440px;
+    margin: auto;
     min-width: 1200px;
     display: flex;
 
@@ -325,7 +264,7 @@ export default {
           justify-content: center;
           align-items: center;
           height: 100px;
-          margin-bottom: 30px;
+          margin-bottom: 10px;
           border-bottom: 1px solid #ccc;
           font-size: 20px;
           font-weight: 600;
@@ -338,17 +277,102 @@ export default {
           justify-content: center;
         }
 
-        .file-wrapper {
-          height: calc(100% - 130px);
+        .list-wrapper {
+          min-height: calc(100% - 110px);
+          overflow-y: auto;
 
-          .file {
+          .current {
+            color: blue;
+          }
+
+          .episode-box {
+            height: 40px;
             display: flex;
-            justify-content: space-around;
             align-items: center;
+            padding: 10px;
+
+            span {
+              &:hover {
+                cursor: pointer;
+                color: blue;
+              }
+            }
           }
         }
       }
     }
+  }
+
+  .below-box {
+    display: flex;
+    justify-content: space-between;
+    width: 1440px;
+    margin: 30px auto;
+
+    .comment-wrapper {
+      width: 1100px;
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 10px;
+
+      .comment-box {
+        margin-bottom: 25px;
+
+        .user-box {
+          display: flex;
+
+          .avatar-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #9e9e9e;
+
+            img {
+              width: 100%;
+              height: 100%;
+            }
+          }
+
+          .comment-content {
+            margin-left: 10px;
+
+            .username {
+              margin-bottom: 5px;
+              color: #61666d;
+              font-size: 14px;
+            }
+          }
+        }
+      }
+    }
+
+    .ppt-box {
+      height: 70px;
+      width: 330px;
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .title {
+      height: 34px;
+      margin-right: 6px;
+      margin-bottom: 10px;
+      line-height: 34px;
+      pointer-events: none;
+      font-weight: 500;
+      font-size: 20px;
+    }
+  }
+}
+</style>
+
+<style lang="less">
+.comment-box {
+  .el-divider--horizontal {
+    margin: 12px 0;
   }
 }
 </style>

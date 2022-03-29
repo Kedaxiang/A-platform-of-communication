@@ -15,8 +15,6 @@
     <div class="content-wrapper">
       <!-- 动态 -->
       <Dynamic v-show="currentIndex === 0" :list="dynamicList" />
-      <!-- 公告 -->
-      <Notice v-show="currentIndex === 2" />
       <!-- 帖子 -->
       <Posts v-show="currentIndex === 1" />
     </div>
@@ -28,8 +26,6 @@
 import Dynamic from "./dynamic.vue";
 // 帖子组件
 import Posts from "./posts.vue";
-// 公告组件
-import Notice from "./notice.vue";
 // 发帖组件
 import PublishBox from "./publishBox.vue";
 import { dynamicList } from "../../assets/util/data";
@@ -38,11 +34,11 @@ export default {
   data() {
     return {
       currentIndex: 0,
-      tabList: ["动态", "帖子", "公告"],
+      tabList: ["动态", "帖子"],
       dynamicList: [],
     };
   },
-  components: { Dynamic, Posts, Notice, PublishBox },
+  components: { Dynamic, Posts, PublishBox },
   created() {
     this.dynamicList = dynamicList;
   },
